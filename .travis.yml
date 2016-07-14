@@ -1,0 +1,14 @@
+sudo: required
+language: python
+python:
+- 3.5
+services:
+- docker
+install:
+- docker build -t qdd .
+script:
+- docker run -it qdd /usr/bin/perl /usr/local/bin/QDD.pl -input_folder /qdd/example -out_folder /qdd/output -fastq 1 -check_contamination 1 -local_blast 0
+notifications:
+  slack:
+    secure: tCfUJEA0rybL8r6HKQbS/nFpy5NRXp4CXCd1xpfqx4bUoXDX40wYnhjhBL6hvkIxoDiekt/Nlqns7AQGetmfF/b2puwartkP0gk8NcjrSw8aD2NX1wqu6PczwB5JBmC9o7TyM/+g4COQHfyfp3SfaPoPkfE+8eiZbFb/bGWfbHC90q7BN5tGiGJckgOc4O/ASABmR/EOrSPj0GqTihBm7Xhg4WOXpSUKJk5rfPJekOflHPObdPtksEtzxOC61bG+YPcy59hwMdMnC5tBmQt7tQ6ZUU1Tx9X+aCkRQps3qLoMjro1P2INo9YV2Ck2Ba/Yai1aUmvNkqIhhB3+5CY//X2eePfuqk/iyw66lL3UYYF2zQKLhe8rItAcUyGHT0ugJyBJXTKljh5h86mHI6SqlunkpM3q3wo78fuJydQI/pXhdZAtObAj/Ar2M51EZlhdt8w/vW4pZ+ctuo8rDLeQXFBVIHivERlrMsksjnju9t4Ss2dmi8xk1OIqxx7ffbgIGl+DUswAIHO2HuNq9nSmjF5xRegaHPkGCVxoDdNU7DrvoQr+lA/fxfUhz41rVRFgwt17cL5qU59mF1E5XQJ04oLwAKGWgwq9ZjQPyEFRBJU/8p38l+f7EoWQ7MAq7HGafCxD+Cxy5EvQiQ74DrKuQhZqD2zdiHkq+oMKyBUAjRg=
+

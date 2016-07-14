@@ -1,3 +1,7 @@
+qdd-docker - QDD in a Docker
+
+[![Build Status](https://travis-ci.org/pseudogene/qdd-docker.svg?branch=master)](https://travis-ci.org/pseudogene/qdd-docker)
+
 # qdd-docker
 
 We foster the openness, integrity, and reproducibility of scientific research.
@@ -7,7 +11,7 @@ Scripts and funtion used deploy [QDD version 3.1+](http://net.imbe.fr/~emeglecz/
 
 ## Short Description
 
-In microsatellite development, high throughput sequencing has replaced the classical cloning based methods and in this process the first two versions of QDD played an important role by dealing with the essential bio-informatics steps leading from raw sequences to primer design. - Now in a Docker
+In microsatellite development, high throughput sequencing has replaced the classical cloning based methods and in this process the first two versions of QDD played an important role by dealing with the essential bio-informatics steps leading from raw sequences to primer design - Now in a Docker
 
 
 ## Associated publication
