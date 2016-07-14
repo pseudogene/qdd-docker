@@ -1,0 +1,30 @@
+#Deployment Makefile
+MAXLIST = 45
+
+URL=ftp://ftp.ncbi.nlm.nih.gov/blast/db
+URL2=http://mirrors.vbi.vt.edu/mirrors/ftp.ncbi.nih.gov/blast/db
+URL3=ftp://bio-mirror.net/biomirror//blast/db
+DBNAME=nt
+DBVERSION=$(shell date +'%Y-%m-%d')
+DEST ?= /blast
+targets = $(addprefix $(DBNAME)., $(shell seq -w 0 $(MAXLIST)))
+
+install: $(targets) get_aria2
+	@echo "Install the database $(DBNAME)"
+
+$(targets):
+	@echo "Download $@.tar.gz"
+	@-mkdir -p $(DEST)
+	-aria2c -s 5 -t 90 --retry-wait=10 -m 10 -c -q -d $(DEST)/ $(URL)/$@.tar.gz $(URL2)/$@.tar.gz $(URL3)/$@.tar.gz
+	@-tar xfz $(DEST)/$@.tar.gz -C $(DEST)
+	@-rm -f $(DEST)/$@.tar.gz
+
+get_aria2:
+	@apt-get update
+	@apt-get install -y aria2
+
+update: remove install
+
+remove:
+	@echo "Removing database $(DBNAME)"
+	@rm -f $(DEST)/$(DBNAME)*
