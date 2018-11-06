@@ -1,14 +1,21 @@
-FROM ubuntu:16.04
+FROM ubuntu:17.04
 MAINTAINER Michael Bekaert <michael.bekaert@stir.ac.uk>
 
-LABEL description="QDD Docker" version="1.0" Vendor="Institute of Aquaculture, University of Stirling"
-ENV DOCKERVERSION 1.0
+LABEL description="QDD Docker" version="1.1" Vendor="Institute of Aquaculture, University of Stirling"
+ENV DOCKERVERSION 1.1
+ENV STACKVERSION 1.47
 
 USER root
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget ca-certificates
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y make bioperl primer3 ncbi-blast+ clustalw
+
+#RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget make ca-certificates gcc g++
+##RUN DEBIAN_FRONTEND=noninteractive apt-get install -y zlib1g-dev libdbd-mysql-perl samtools libbam-dev perl mysql-client --no-install-recommends
+#RUN DEBIAN_FRONTEND=noninteractive apt-get install -y zlib1g-dev samtools libbam-dev perl --no-install-recommends
+#RUN DEBIAN_FRONTEND=noninteractive apt-get install -y bioperl --no-install-recommends
+#RUN DEBIAN_FRONTEND=noninteractive apt-get install -y primer3 ncbi-blast+ clustalw libxml-parser-perl libwww-perl
 
 RUN cpan App::cpanminus && \
     cpanm Bio::DB::EUtilities && \
@@ -36,6 +43,13 @@ RUN wget http://net.imbe.fr/~emeglecz/QDDweb/QDD-3.1.2/QDD-3.1.2.tar.gz -O /usr/
 
 RUN mkdir /qdd && mkdir /blast_databases
 
+RUN git clone https://github.com/brwnj/fastq-join && \
+    cd fastq-join && \
+    make && \
+    mv fastq-join /usr/local/bin && \
+    cd .. && \
+    rm -rf fastq-join
+
 RUN cd /qdd && \
     wget http://net.imbe.fr/~emeglecz/QDDweb/QDD-3.1.2/QDD-3.1.2_example4.tar.gz -O /qdd/QDD-3.1.2_example4.tar.gz && \
     tar xfz QDD-3.1.2_example4.tar.gz && \
@@ -43,5 +57,16 @@ RUN cd /qdd && \
 	mv data_example4/example4.fastq example/example4.fastq && \
 	mkdir output && \
 	rm -rf /qdd/QDD-3.1.2_example4.tar.gz data_example4
+
+RUN wget http://catchenlab.life.illinois.edu/stacks/source/stacks-${STACKVERSION}.tar.gz && \
+    tar xzf stacks-${STACKVERSION}.tar.gz && \
+    cd stacks-${STACKVERSION} && \
+    ./configure --enable-bam && \
+    make -j 8 && \
+    make -j 8 -k install && \
+    make -j 8 -k install && \
+    rm -rf /usr/local/share/stacks/php && \
+    cd ..  && \
+    rm -rf stacks-${STACKVERSION}.tar.gz stacks-${STACKVERSION}
 
 WORKDIR /qdd
